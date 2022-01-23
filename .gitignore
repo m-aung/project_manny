@@ -1,4 +1,6 @@
 .env
-trash
+trash/
 notes.md
 node_modules
+package-lock.json
+.DS_Store
