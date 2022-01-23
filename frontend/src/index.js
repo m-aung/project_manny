@@ -58,7 +58,6 @@ const router = async (properties=null) => {
 
   // error pathnames
   if (!match) {
-    console.error(`${location.pathname} not found`)
     match = {
       route: { 
         path: "/error", 
@@ -69,7 +68,6 @@ const router = async (properties=null) => {
       isMatch: true // [location.pathname]
     };
   }
-  console.log('after match:',match)
 
   const {view, title, props} = match.route
   myDOM.setup(view, title, props, '#root')
@@ -80,17 +78,17 @@ const validateEmail = (email) => {
   const validEmail = /^\S+@\S+$/g
   return validEmail.test(email) ? null : {message: 'Email is invalid!'}
 }
-const validateName = ({firstName, lastName}) => {
+const validateName = (firstName, lastName) => {
   if(!firstName || !lastName) return {message: 'Both First and Last name are required!'}
   const validName = /^(0-9)/g
   return !validName.test(firstName) && !validName.test(lastName) ? null : {message: 'Numbers are not allowed in both names'}
 }
 
 const validSubject = (subject) => {
-  return subject ? null : {message: 'Subject is required!'}
+  return subject.length === 0 ? {message: 'Subject is required!'} : null
 }
 const validMessageBody = (messageBody) => {
-  return messageBody ? null : {message: 'Message Body is required!'}
+  return messageBody.length === 0 ? {message: 'Message Body is required!'} : null
 }
 
 window.addEventListener("popstate", router);
@@ -111,26 +109,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const firstName = await myDOM.getValue('#firstname')
     const lastName = await myDOM.getValue('#lastname')
     const email = await myDOM.getValue('#email')
-    const subject = await myDOM.getValue('#subject')
-    const messageBody = await myDOM.getValue('#message-body')
+    const subjectElement = await document.querySelector('#subject')
+    const messageBodyElement = await document.querySelector('#message-body')
+    const subject = await subjectElement.value
+    const messageBody = await messageBodyElement.value
 
-      const nameErrorMessage = validateName({firstName,lastName})
-      nameErrorMessage ? errorList.push(nameErrorMessage.message) : null
-
-    if(email){
-      const emailErrorMessage = validateEmail(email)
-      emailErrorMessage ? errorList.push(emailErrorMessage) : null
-    }
-    if(messageBody) {
-      const messageBodyErrorMessage = validMessageBody(messageBody)
-      messageBodyErrorMessage ? errorList.push(messageBody) : null
-    }
+    const nameErrorMessage = validateName(firstName,lastName)
+    const emailErrorMessage = validateEmail(email)
+    const messageBodyErrorMessage = validMessageBody(messageBody)
     const subjectErrorMessage = validSubject(subject) // make is a drop down
-    console.log(errorList)
+
+    nameErrorMessage ? errorList.push(nameErrorMessage) : null
+    emailErrorMessage ? errorList.push(emailErrorMessage) : null
+    messageBodyErrorMessage ? errorList.push(messageBody) : null
+
     if(errorList.length){
       console.log(`errorList: ${errorList}`)
       for(let i= 0; i< errorList.length; i++){
-        if(errorList[i]) alert(errorList[i])
+        if(errorList[i]) alert(errorList[i]['message'])
       }
       return
     }
