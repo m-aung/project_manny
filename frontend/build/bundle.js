@@ -768,7 +768,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _css_styles_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _css_tailwind_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(12);
 /* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(14);
-/* harmony import */ var _js_myDOM__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(25);
+/* harmony import */ var _js_myDOM__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(24);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -828,15 +828,6 @@ var routes = [{
       return (0,_components__WEBPACK_IMPORTED_MODULE_2__.MessageSent)(props);
     });
   }
-}, {
-  path: "/error",
-  title: '404 Not Found',
-  props: {},
-  view: function view(props) {
-    return (0,_components__WEBPACK_IMPORTED_MODULE_2__.Layout)(function () {
-      return (0,_components__WEBPACK_IMPORTED_MODULE_2__.MessageSent)(props);
-    });
-  }
 }];
 
 var navigateTo = function navigateTo(url) {
@@ -879,7 +870,19 @@ var router = /*#__PURE__*/function () {
             if (!match) {
               console.error("".concat(location.pathname, " not found"));
               match = {
-                route: routes[0],
+                route: {
+                  path: "/error",
+                  title: '404 Not Found',
+                  props: {},
+                  view: function view(props) {
+                    return (0,_components__WEBPACK_IMPORTED_MODULE_2__.Layout)(function () {
+                      return (0,_components__WEBPACK_IMPORTED_MODULE_2__.ErrorMessage)({
+                        code: '404',
+                        message: "Page Not Found."
+                      });
+                    });
+                  }
+                },
                 isMatch: true // [location.pathname]
 
               };
@@ -1618,8 +1621,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "MessageSent": () => (/* reexport safe */ _MessageSent__WEBPACK_IMPORTED_MODULE_5__["default"]),
 /* harmony export */   "Nav": () => (/* reexport safe */ _Nav__WEBPACK_IMPORTED_MODULE_6__["default"]),
 /* harmony export */   "Videos": () => (/* reexport safe */ _Videos__WEBPACK_IMPORTED_MODULE_7__["default"]),
-/* harmony export */   "VideoView": () => (/* reexport safe */ _VideoView__WEBPACK_IMPORTED_MODULE_8__["default"]),
-/* harmony export */   "ErrorMessage": () => (/* reexport safe */ _ErrorMessage__WEBPACK_IMPORTED_MODULE_9__["default"])
+/* harmony export */   "ErrorMessage": () => (/* reexport safe */ _ErrorMessage__WEBPACK_IMPORTED_MODULE_8__["default"])
 /* harmony export */ });
 /* harmony import */ var _Home__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(15);
 /* harmony import */ var _About__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(16);
@@ -1629,9 +1631,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _MessageSent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(21);
 /* harmony import */ var _Nav__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(20);
 /* harmony import */ var _Videos__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(22);
-/* harmony import */ var _VideoView__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(23);
-/* harmony import */ var _ErrorMessage__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(24);
-
+/* harmony import */ var _ErrorMessage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(23);
 
 
 
@@ -1815,7 +1815,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var MessageSent = function MessageSent(props) {
-  console.log("props from Messeage confirmation: ".concat(props));
   var firstName = props.firstName,
       lastName = props.lastName,
       email = props.email;
@@ -1874,33 +1873,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-var VideoView = function VideoView() {
-  return "\n  <div>\n    This is VideoView\n  </div>\n  ";
-};
+var ErrorMessage = function ErrorMessage(_ref) {
+  var code = _ref.code,
+      message = _ref.message;
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (VideoView);
+  var goBack = function goBack(e) {
+    e.preventDefault();
+    console.log('clicked!');
+    history.back();
+  };
 
-/***/ }),
-/* 24 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-var ErrorMessage = function ErrorMessage(props) {
-  console.log("props from Messeage confirmation: ".concat(props));
-  var firstName = props.firstName,
-      lastName = props.lastName,
-      email = props.email;
-  return "\n  <div class=\"relative w-full h-[80%] flex flex-col align-center gap-x-3 bg-blue-300\">\n    <h1 class=\"p-3 text-3xl text-center\"> Thank you ".concat(firstName, " ").concat(lastName, "</h1>\n    <div class=\"flex flex-col justify-center items-center gap-y-3 p-2\" >\n    <p class=\"ml-[5%] mr-[5%] text-m\">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos tempora distinctio deleniti beatae ut repellendus, aspernatur animi placeat nisi, molestiae veniam neque impedit quasi hic voluptates vero amet quidem sapiente.</p>\n    <p class=\"text-m\">We will contact you shortly via ").concat(email, "</p>\n    </div>\n  </div>\n  ");
+  return "\n  <div class=\"relative w-full h-screen flex flex-col justify-center align-center gap-x-3 bg-blue-300\">\n    <h1 class=\"p-3 text-3xl text-center\"> Error Code: ".concat(code, "</h1>\n    <div class=\"flex flex-col justify-center items-center gap-y-3 p-2\" >\n    <p class=\"ml-[5%] mr-[5%] text-m\">").concat(message, "</p>\n    <p class=\"ml-[5%] mr-[5%] text-m\">Back to <span class=\"p-1 text-md><a href=\"/\">Home</a></span></p>\n    </div>\n  </div>\n  ");
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ErrorMessage);
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
