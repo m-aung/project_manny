@@ -1,4 +1,5 @@
 .env
-trash
+trash/
 notes.md
 node_modules
+package-lock.json
