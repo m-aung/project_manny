@@ -6,7 +6,8 @@ import {
   Contact,
   MessageSent,
   About,
-  Layout
+  Layout,
+  ErrorMessage
 } from './components'
 import myDOM from './js/myDOM'
 
@@ -36,11 +37,6 @@ const routes = [
     props:{},
     view: (props)=> Layout(()=>MessageSent(props)),
   },
-  { path: "/error", 
-    title: '404 Not Found',
-    props:{},
-    view: (props)=> Layout(()=>MessageSent(props)),
-  },
 ];
 const navigateTo = (url,props=null) => {
   // const inputURL = new URL(url)
@@ -64,7 +60,12 @@ const router = async (properties=null) => {
   if (!match) {
     console.error(`${location.pathname} not found`)
     match = {
-      route: routes[0],
+      route: { 
+        path: "/error", 
+        title: '404 Not Found',
+        props:{},
+        view: (props)=> Layout(()=>ErrorMessage({code:'404', message:"Page Not Found."})),
+      },
       isMatch: true // [location.pathname]
     };
   }

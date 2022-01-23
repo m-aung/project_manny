@@ -1,5 +1,4 @@
 const MessageSent = (props) => {
-  console.log(`props from Messeage confirmation: ${props}`)
   const {firstName, lastName, email} = props
   return(
   `
