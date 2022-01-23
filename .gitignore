@@ -3,4 +3,7 @@ trash/
 notes.md
 node_modules
 package-lock.json
+<<<<<<< HEAD
 .DS_Store
+=======
+>>>>>>> 3cd1464c99a2ab09ae4dd8e31ec5b96b1f7bb3bc
