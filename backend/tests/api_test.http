@@ -1,0 +1,13 @@
+post http://localhost:5000/videos/edit/post-video
+Content-Type: application/json
+
+{
+  "video_id": "2",
+  "title": "Demo Video",
+  "video_link": "demo.mp4",
+  "views": "3,02,108",
+  "likes": "2,340",
+  "comments": "4",
+  "uploaded_on": "02/02/2022 at 02:20:22PM",
+  "created_on": "02/02/2022 at 02:20:22PM"
+}
