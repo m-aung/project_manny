@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Youtube Channel Subscriber List</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1 style="text-align: center;">Your Subscription List</h1>
+  <ul>
+    <% videoList.forEach((videos) => { %>
+      <% videos.forEach((video,id) => { %>
+        <ul>
+          <li>List <%=id+1%></li>
+          <ul>
+            <% for(const item in video){ %>
+              <li><%= item.concat(': ', video[item]) %></li>
+            <% } %>
+          </ul>
+        </ul>
+      <%}) %>
+
+    <%}) %>
+  </ul>
+  </div>
+</body>
+</html>
