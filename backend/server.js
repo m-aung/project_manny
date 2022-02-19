@@ -16,6 +16,8 @@ const PORT = process.env.SERVER_PORT || 5500;
  * @redirect_uris {String} a list of redirect URIS
  * @access_type offline
  * @scopes {String} a list of scope
+ * @getPlayList {function} async function for getting all playlist information from youtube
+ * @getPlayListItems {function} async function for getting all items of one playlist
  */
 
 const OAuth2 = google.auth.OAuth2
@@ -33,6 +35,7 @@ const getPlayList = async () => {
       return {
         playlist : res.data.items.map(({id,snippet,contentDetails}) => {
           const {channelId,title,thumbnails,publishedAt} = snippet
+          console.log('contentDetails:',contentDetails) // to test the data
           return {
             playlistId: id, 
             channelId,
@@ -55,18 +58,15 @@ const getPlaylistItems = async(id)=>{
     playlistId: id,
   }).then(response => {
     const video = response.data.items
-    // console.log('video from playlist items: ', video)
     const channelVideoListData = response.data.items
     const channelVideoList = channelVideoListData.map(({snippet, contentDetails})=>{
-      console.log('snippet:',snippet)
+      // console.log('snippet:',snippet)
       const {channelTitle, title, publishedAt} = snippet
       const {videoId, videoPublishedAt} = contentDetails
       return {
         channelTitle,title,publishedAt,videoId, videoPublishedAt
       }
     })
-    // console.log('channelVideoListData:',channelVideoListData)
-
     return {
       playlist: channelVideoList
     }
@@ -74,19 +74,23 @@ const getPlaylistItems = async(id)=>{
   return response
 }
 
+
 app.use(cookieParser())
 app.use('/static',express.static(path.resolve(__dirname,'public')))
 app.set('view engine','ejs')
 app.set('views', path.resolve(__dirname, './views'))
 
+//root route
 app.get('/',(req,res) => {
   const youtube = oauth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: scopes,
   })
-  const vimeo = '#'
+  const vimeo = '#' // add vimeo client here
   res.render('index',{loginLink:{youtube, vimeo}})
 })
+
+// the route name can be modified at youtube developer board. This is for youtube redirect link after successful login
 app.get("/oauth2callback", (req, res) => {
   if (req.query.error) {
     // The user did not give us permission.
@@ -101,6 +105,8 @@ app.get("/oauth2callback", (req, res) => {
     });
   }
 });
+
+// route to display the data
 app.get("/get/mychannel", async (req, res) => {
   if (!req.cookies.jwt) {
     // We haven't logged in
@@ -109,17 +115,15 @@ app.get("/get/mychannel", async (req, res) => {
 
   // Add this specific user's credentials to our OAuth2 client
   oauth2Client.credentials = jwt.verify(req.cookies.jwt, CONFIG.JWTsecret);
+  const allVidoeList = []
 
   /**
    * Youtube v3 api response data
-   * @playlistId {String} Required
-   * @part {Array} list of @snippet , @contentDetails Required for playlist
-   * @part {Array} list of @id , @snippet , @contentDetails Required for playlistItems
-   * 
+   * @playlistId {string} Required
+   * @part {array} list of @snippet , @contentDetails Required for playlist
+   * @part {array} list of @id , @snippet , @contentDetails Required for playlistItems
+   * @allVidoeList {array} list of all video informations
    */
-
-
-  
 
   const playlistData = await getPlayList()
   const {playlist} = playlistData
@@ -136,34 +140,17 @@ app.get("/get/mychannel", async (req, res) => {
     return res.send({error: 'Cannot connect to Youtube to obtain your information'})
   }
 
-  const allVidoeList = []
-
   for(let i=0; i < playlist.length; i++){
-    // console.log(playlist[i].playlistId)
     let curPlaylistItems = await getPlaylistItems(playlist[i].playlistId)
-    // console.log(curPlaylistItems)
     allVidoeList.push(curPlaylistItems.playlist)
   }
-
-  // console.log('playlist Items:',allVidoeList)
-  // return res.render('videos',{videoList: allVidoeList})
   return res.send(allVidoeList)
 });
 
-app.get('/api', (req, res) => {
-  const { firstname, lastname, email } = req.query;
-  res
-    .send(JSON.stringify({ firstname, lastname, email }))
-    // .redirect('http://localhost:3030/');
-});
-app.get('/videoList/latest/:datefrom', (req, res) => {
-  console.log(req.param);
-
-  // query data from database
-  res.send(JSON.stringify(data));
-});
-app.get('/auth2callback', ()=>{
-  res.send(JSON.stringify({'message': 'success'}))
-})
+/**
+ * 1. store the playlist information in data base along with user information
+ * 2. create end point for front end client
+ * 3. refractor the code for modularization
+ */
 
 app.listen(PORT, () => console.log(`Server is running at ${PORT}`));
