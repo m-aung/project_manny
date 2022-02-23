@@ -5,7 +5,7 @@ const keys = require('./client_secret.json')
 const {client_id, project_id, token_uri, auth_provider_x509_cert_url, client_secret, redirect_uris} = keys.web
 
 
-module.exports = {
+module.exports ={
   JWTsecret: 'manny',
   base_url,
   Oauth2Credential:{
